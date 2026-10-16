@@ -5,7 +5,7 @@ type QA = { q: string; a: string };
 
 export interface Content {
   meta: Record<PageKey, Meta>;
-  nav: { approach: string; expertise: string; pricing: string; faq: string; cta: string; menuLabel: string; langLabel: string };
+  nav: { approach: string; expertise: string; pricing: string; faq: string; cta: string; menu: string; menuLabel: string; langLabel: string };
   common: {
     plan: string; seePricing: string; waText: string; whatsapp: string; email: string; phone: string;
     footerLegal: string; footerLinks: { privacy: string; bonaire: string; contact: string };
@@ -48,7 +48,7 @@ const nl: Content = {
     contact: { title: 'Contact — Ledgerwerk', description: 'Plan een kennismaking met Ledgerwerk via WhatsApp of e-mail. Gevestigd in Kralendijk, Bonaire.' },
     privacy: { title: 'Privacyverklaring — Ledgerwerk', description: 'Hoe Ledgerwerk omgaat met persoonsgegevens van contactpersonen en met gegevens die wij in opdracht van accountantskantoren verwerken.' },
   },
-  nav: { approach: 'Aanpak', expertise: 'Expertise', pricing: 'Prijzen', faq: 'Vragen', cta: 'Kennismaken', menuLabel: 'Hoofdmenu', langLabel: 'Taal' },
+  nav: { approach: 'Aanpak', expertise: 'Expertise', pricing: 'Prijzen', faq: 'Vragen', cta: 'Kennismaken', menu: 'Menu', menuLabel: 'Hoofdmenu', langLabel: 'Taal' },
   common: {
     plan: 'Plan een kennismaking', seePricing: 'Bekijk de prijzen', waText: 'Hallo Ledgerwerk, ik wil graag kennismaken.',
     whatsapp: 'WhatsApp ons', email: 'E-mail', phone: 'Telefoon',
@@ -168,7 +168,7 @@ const en: Content = {
     contact: { title: 'Contact — Ledgerwerk', description: 'Book an introduction with Ledgerwerk via WhatsApp or email. Based in Kralendijk, Bonaire.' },
     privacy: { title: 'Privacy statement — Ledgerwerk', description: 'How Ledgerwerk handles personal data of contacts and data we process on behalf of accounting firms.' },
   },
-  nav: { approach: 'Approach', expertise: 'Expertise', pricing: 'Pricing', faq: 'FAQ', cta: 'Get in touch', menuLabel: 'Main menu', langLabel: 'Language' },
+  nav: { approach: 'Approach', expertise: 'Expertise', pricing: 'Pricing', faq: 'FAQ', cta: 'Get in touch', menu: 'Menu', menuLabel: 'Main menu', langLabel: 'Language' },
   common: {
     plan: 'Book an introduction', seePricing: 'See pricing', waText: 'Hello Ledgerwerk, I would like to get acquainted.',
     whatsapp: 'WhatsApp us', email: 'Email', phone: 'Phone',
@@ -288,7 +288,7 @@ const es: Content = {
     contact: { title: 'Contacto — Ledgerwerk', description: 'Agende una presentación con Ledgerwerk por WhatsApp o correo. Con sede en Kralendijk, Bonaire.' },
     privacy: { title: 'Declaración de privacidad — Ledgerwerk', description: 'Cómo trata Ledgerwerk los datos personales de contactos y los datos que procesamos por encargo de despachos contables.' },
   },
-  nav: { approach: 'Enfoque', expertise: 'Experiencia', pricing: 'Precios', faq: 'Preguntas', cta: 'Contactar', menuLabel: 'Menú principal', langLabel: 'Idioma' },
+  nav: { approach: 'Enfoque', expertise: 'Experiencia', pricing: 'Precios', faq: 'Preguntas', cta: 'Contactar', menu: 'Menú', menuLabel: 'Menú principal', langLabel: 'Idioma' },
   common: {
     plan: 'Agende una presentación', seePricing: 'Ver precios', waText: 'Hola Ledgerwerk, me gustaría conocerles.',
     whatsapp: 'Escríbanos por WhatsApp', email: 'Correo', phone: 'Teléfono',
