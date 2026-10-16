@@ -34,7 +34,7 @@ const stepIcons = [['mail', '#F08A6B', '#FFFFFF'], ['sliders', '#F6D46B', '#1E1A
   <div class="wrap hero-grid">
     <div class="hero-copy">
       <span class="eyebrow teal in">{h.eyebrow}</span>
-      <h1 class="h1 in" style="animation-delay:80ms"><span class="nowrap">{h.h1a}</span><br /><span class="nowrap">{lang === 'nl' ? 'U' : lang === 'es' ? 'Usted' : 'You'} <span class="mark mark-in" style="color:var(--accent)">{h.h1b}</span></span></h1>
+      <h1 class={`h1 in${h.h1a.length > 14 ? ' long' : ''}`} style="animation-delay:80ms"><span class={h.h1a.length > 14 ? '' : 'nowrap'}>{h.h1a}</span><br /><span class="nowrap">{lang === 'nl' ? 'U' : lang === 'es' ? 'Usted' : 'You'} <span class="mark mark-in" style="color:var(--accent)">{h.h1b}</span></span></h1>
       <p class="lede in" style="animation-delay:160ms">{h.lede}</p>
       <div class="hero-ctas in" style="animation-delay:240ms">
         <a class="btn" href={pathFor('contact', lang)}>{c.plan}</a>
