@@ -1,0 +1,100 @@
+---
+import '../styles/global.css';
+import Logo from '../components/Logo.astro';
+import { langs, pathFor, htmlLang, ogLocale, langLabel, langName, contact, type Lang, type PageKey } from '../i18n/routes';
+import { content } from '../i18n/content';
+
+interface Props { lang: Lang; page: PageKey; jsonld?: object[] }
+const { lang, page, jsonld = [] } = Astro.props;
+const c = content[lang];
+const meta = c.meta[page];
+const site = 'https://ledgerwerk.com';
+const canonical = site + pathFor(page, lang);
+const home = pathFor('home', lang);
+const wa = `${contact.waBase}?text=${encodeURIComponent(c.common.waText)}`;
+
+const org = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfessionalService',
+  '@id': site + '/#org',
+  name: 'Ledgerwerk',
+  legalName: 'Nefar BV',
+  url: site + '/',
+  logo: site + '/favicon.svg',
+  email: contact.email,
+  telephone: contact.phoneE164,
+  description: c.meta.home.description,
+  address: { '@type': 'PostalAddress', addressLocality: 'Kralendijk', addressRegion: 'Bonaire', addressCountry: 'BQ' },
+  areaServed: [{ '@type': 'Place', name: 'Bonaire' }, { '@type': 'Place', name: 'Caribbean Netherlands' }],
+  knowsAbout: ['Odoo', 'Odoo Accounting', 'Bookkeeping', 'Bank reconciliation', 'Accounts payable', 'BES tax (ABB)'],
+  knowsLanguage: ['nl', 'en', 'es'],
+  slogan: 'Wij boeken. U adviseert.',
+};
+const website = { '@context': 'https://schema.org', '@type': 'WebSite', name: 'Ledgerwerk', url: site + '/', inLanguage: htmlLang[lang] };
+const all = [org, website, ...jsonld];
+---
+<!doctype html>
+<html lang={htmlLang[lang]}>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{meta.title}</title>
+  <meta name="description" content={meta.description} />
+  <link rel="canonical" href={canonical} />
+  {langs.map((l) => <link rel="alternate" hreflang={htmlLang[l]} href={site + pathFor(page, l)} />)}
+  <link rel="alternate" hreflang="x-default" href={site + pathFor(page, 'nl')} />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <meta name="theme-color" content="#714B67" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Ledgerwerk" />
+  <meta property="og:title" content={meta.title} />
+  <meta property="og:description" content={meta.description} />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:locale" content={ogLocale[lang]} />
+  <meta name="twitter:card" content="summary" />
+  {all.map((j) => <script type="application/ld+json" set:html={JSON.stringify(j)} />)}
+</head>
+<body>
+  <a class="skip" href="#main">{lang === 'nl' ? 'Naar inhoud' : lang === 'es' ? 'Ir al contenido' : 'Skip to content'}</a>
+  <header class="wrap site-header">
+    <a class="brand" href={home}><Logo size={28} /><span>Ledgerwerk</span></a>
+    <nav class="nav" aria-label={c.nav.menuLabel}>
+      <a class="navlink" href={home + '#aanpak'}>{c.nav.approach}</a>
+      <a class="navlink" href={home + '#expertise'}>{c.nav.expertise}</a>
+      <a class="navlink" href={pathFor('pricing', lang)}>{c.nav.pricing}</a>
+      <a class="navlink" href={pathFor('faq', lang)}>{c.nav.faq}</a>
+      <span class="langs" aria-label={c.nav.langLabel}>
+        {langs.map((l) => <a href={pathFor(page, l)} hreflang={l} lang={l} aria-current={l === lang ? 'true' : 'false'} title={langName[l]}>{langLabel[l]}</a>)}
+      </span>
+      <a class="btn small" href={pathFor('contact', lang)}>{c.nav.cta}</a>
+    </nav>
+  </header>
+  <main id="main">
+    <slot />
+  </main>
+  <section class="cta-band">
+    <div class="c1" aria-hidden="true"></div><div class="c2" aria-hidden="true"></div>
+    <div class="wrap cta-inner">
+      <h2 class="reveal">{c.home.ctaTitle}</h2>
+      <div class="cta-row reveal">
+        <a class="btn white" href={wa}>{c.common.whatsapp}</a>
+        <span class="cta-contact">
+          <a href={'tel:' + contact.phoneE164}>{contact.phoneDisplay}</a>
+          <a href={'mailto:' + contact.email} class="mono">{contact.email}</a>
+        </span>
+      </div>
+    </div>
+  </section>
+  <footer class="site-footer">
+    <div class="wrap footer-inner">
+      <a class="brand" style="color:#fff;font-size:16px" href={home}><Logo size={20} bg="#FFFFFF" fg="#1E1A1D" mid="#C99A1E" /><span>Ledgerwerk</span></a>
+      <nav aria-label="Footer">
+        <a href={pathFor('bonaire', lang)}>{c.common.footerLinks.bonaire}</a>
+        <a href={pathFor('contact', lang)}>{c.common.footerLinks.contact}</a>
+        <a href={pathFor('privacy', lang)}>{c.common.footerLinks.privacy}</a>
+      </nav>
+      <span>{c.common.footerLegal}</span>
+    </div>
+  </footer>
+</body>
+</html>

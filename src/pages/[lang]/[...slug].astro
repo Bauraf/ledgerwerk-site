@@ -1,0 +1,157 @@
+---
+import Base from '../../layouts/Base.astro';
+import Home from '../../components/Home.astro';
+import PriceCards from '../../components/PriceCards.astro';
+import Icon from '../../components/Icon.astro';
+import { langs, pages, slugs, pathFor, contact, type Lang, type PageKey } from '../../i18n/routes';
+import { content, bundles } from '../../i18n/content';
+
+export function getStaticPaths() {
+  return langs.flatMap((lang) =>
+    pages.map((page) => ({ params: { lang, slug: slugs[page][lang] || undefined }, props: { lang, page } }))
+  );
+}
+const { lang, page } = Astro.props as { lang: Lang; page: PageKey };
+const c = content[lang];
+const site = 'https://ledgerwerk.com';
+const wa = `${contact.waBase}?text=${encodeURIComponent(c.common.waText)}`;
+
+const jsonld: object[] = [];
+if (page === 'faq') {
+  jsonld.push({
+    '@context': 'https://schema.org', '@type': 'FAQPage', inLanguage: lang,
+    mainEntity: c.faq.items.map((i) => ({ '@type': 'Question', name: i.q, acceptedAnswer: { '@type': 'Answer', text: i.a } })),
+  });
+}
+if (page === 'pricing' || page === 'home') {
+  jsonld.push({
+    '@context': 'https://schema.org', '@type': 'Service', name: 'Ledgerwerk', serviceType: 'Outsourced Odoo bookkeeping for accounting firms',
+    provider: { '@id': site + '/#org' }, areaServed: 'Bonaire', inLanguage: lang,
+    offers: bundles.map((b) => ({
+      '@type': 'Offer', name: `${c.pricing.bundle} ${b.key}`, price: b.price, priceCurrency: 'USD',
+      description: `${b.included} ${c.pricing.included.toLowerCase()}; ${c.pricing.extra.toLowerCase()} $${b.extraEn}`,
+      priceSpecification: { '@type': 'UnitPriceSpecification', price: b.price, priceCurrency: 'USD', billingDuration: 'P1M' },
+    })),
+  });
+}
+if (page !== 'home') {
+  jsonld.push({
+    '@context': 'https://schema.org', '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Ledgerwerk', item: site + pathFor('home', lang) },
+      { '@type': 'ListItem', position: 2, name: c.meta[page].title.split(' — ')[0], item: site + pathFor(page, lang) },
+    ],
+  });
+}
+---
+<Base lang={lang} page={page} jsonld={jsonld}>
+  {page === 'home' && <Home lang={lang} />}
+
+  {page === 'pricing' && (
+    <div class="wrap section tight-end" style="padding-top:56px">
+      <div class="head-block">
+        <span class="eyebrow accent">{c.home.pricingEyebrow}</span>
+        <h1 class="h2" style="font-size:clamp(40px,5vw,68px)">{c.pricing.h1}</h1>
+        <p class="lede">{c.pricing.lede}</p>
+      </div>
+      <PriceCards lang={lang} />
+      <div class="two-col">
+        <div class="list-card reveal">
+          <h2 style="margin:0 0 14px;font-size:22px">{c.pricing.countTitle}</h2>
+          <ul>{c.pricing.countItems.map((t) => <li><span class="ico" style="background:var(--mint)"><Icon name="check" stroke="#016A70" /></span>{t}</li>)}</ul>
+          <p class="fine" style="margin-top:14px">{c.pricing.countNot}</p>
+        </div>
+        <div class="list-card dark reveal">
+          <h2 style="margin:0 0 14px;font-size:22px">{c.pricing.exampleTitle}</h2>
+          <p style="margin:0;font-size:18px;line-height:1.6">{c.pricing.exampleText}</p>
+        </div>
+      </div>
+      <div class="prose">
+        <h2>{c.pricing.termsTitle}</h2>
+        <ul>{c.pricing.terms.map((t) => <li>{t}</li>)}</ul>
+      </div>
+    </div>
+  )}
+
+  {page === 'faq' && (
+    <div class="wrap section tight-end" style="padding-top:56px">
+      <div class="head-block">
+        <h1 class="h2" style="font-size:clamp(40px,5vw,68px)">{c.faq.h1}</h1>
+        <p class="lede">{c.faq.lede}</p>
+      </div>
+      <div class="faq">
+        {c.faq.items.map((i, n) => (
+          <details open={n === 0}>
+            <summary>{i.q}</summary>
+            <p>{i.a}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  )}
+
+  {page === 'bonaire' && (
+    <div class="wrap section tight-end" style="padding-top:56px">
+      <div class="head-block">
+        <span class="eyebrow teal">Kralendijk · Bonaire</span>
+        <h1 class="h2" style="font-size:clamp(40px,5vw,68px)">{c.bonaire.h1}</h1>
+        <p class="lede">{c.bonaire.lede}</p>
+      </div>
+      <div class="cards4">
+        {c.bonaire.points.map((p, i) => (
+          <div class="card reveal" style="border:1px solid var(--line)">
+            <span class="badge" style={`background:${['#F6D46B', '#017E84', '#F08A6B', '#714B67'][i]}`}><Icon name={['pin', 'scale', 'userplus', 'wrench'][i]} stroke={i === 0 ? '#1E1A1D' : '#FFFFFF'} /></span>
+            <h2 style="margin:0;font-size:20px">{p.title}</h2>
+            <p>{p.text}</p>
+          </div>
+        ))}
+      </div>
+      <p class="lede">{c.bonaire.closing}</p>
+      <div class="hero-ctas">
+        <a class="btn wa" href={wa}>{c.common.whatsapp}</a>
+        <a class="link-arrow" href={pathFor('pricing', lang)}>{c.common.seePricing}<Icon name="arrow" size={16} width={2} /></a>
+      </div>
+    </div>
+  )}
+
+  {page === 'contact' && (
+    <div class="wrap section tight-end" style="padding-top:56px">
+      <div class="head-block">
+        <h1 class="h2" style="font-size:clamp(40px,5vw,68px)">{c.contact.h1}</h1>
+        <p class="lede">{c.contact.lede}</p>
+      </div>
+      <div class="contact-grid">
+        <div class="card" style="border:1px solid var(--line)">
+          <span class="badge" style="background:#1F8F4E"><Icon name="chat" stroke="#FFFFFF" /></span>
+          <h2 style="margin:0;font-size:20px">{c.contact.waTitle}</h2>
+          <p>{c.contact.waText}</p>
+          <a class="btn wa" href={wa} style="align-self:flex-start">{c.common.whatsapp}</a>
+        </div>
+        <div class="card" style="border:1px solid var(--line)">
+          <span class="badge" style="background:var(--accent)"><Icon name="mail" stroke="#FFFFFF" /></span>
+          <h2 style="margin:0;font-size:20px">{c.contact.mailTitle}</h2>
+          <p>{c.contact.mailText}</p>
+          <a class="big" href={'mailto:' + contact.email}>{contact.email}</a>
+          <a href={'tel:' + contact.phoneE164} style="color:var(--ink-2)">{contact.phoneDisplay}</a>
+          <span class="fine">{c.contact.location}</span>
+        </div>
+      </div>
+      <div class="prose" style="max-width:none">
+        <h2>{c.contact.nextTitle}</h2>
+        <ol class="next-list">{c.contact.next.map((t) => <li>{t}</li>)}</ol>
+      </div>
+    </div>
+  )}
+
+  {page === 'privacy' && (
+    <div class="wrap section tight-end" style="padding-top:56px">
+      <div class="head-block">
+        <h1 class="h2" style="font-size:clamp(40px,5vw,68px)">{c.privacy.h1}</h1>
+        <p class="fine">{c.privacy.updated}</p>
+      </div>
+      <div class="prose">
+        {c.privacy.sections.map((s) => (<><h2>{s.title}</h2><p>{s.text}</p></>))}
+      </div>
+    </div>
+  )}
+</Base>

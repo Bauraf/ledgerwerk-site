@@ -1,0 +1,21 @@
+---
+import { content, bundles } from '../i18n/content';
+import type { Lang } from '../i18n/routes';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const p = content[lang].pricing;
+const fmt = (n: number) => (lang === 'en' ? n.toLocaleString('en-US') : n.toLocaleString('nl-NL'));
+---
+<div class="price-grid">
+  {bundles.map((b) => (
+    <div class={`price ${b.tone} reveal`}>
+      <span class="ptag">{p.bundle} {b.key}</span>
+      <p class="amount" style="margin:0"><strong>${b.price}</strong><span>{p.perMonth}</span></p>
+      <dl>
+        <div><dt>{p.included}</dt><dd>{fmt(b.included)}</dd></div>
+        <div><dt>{p.extra}</dt><dd>${lang === 'en' ? b.extraEn : b.extra}</dd></div>
+      </dl>
+    </div>
+  ))}
+</div>
+<p class="fine">{p.footnote}</p>

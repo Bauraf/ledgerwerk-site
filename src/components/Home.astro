@@ -1,0 +1,152 @@
+---
+import Icon from './Icon.astro';
+import PriceCards from './PriceCards.astro';
+import { content } from '../i18n/content';
+import { pathFor, contact, type Lang } from '../i18n/routes';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const h = content[lang].home;
+const c = content[lang].common;
+const wa = `${contact.waBase}?text=${encodeURIComponent(c.waText)}`;
+
+const pillIcon = { ok: 'check', missing: 'circle', review: 'person' } as const;
+const pillText = { ok: h.statusOk, missing: h.statusMissing, review: h.statusReview };
+
+const typeOf: string[][] = [['advies', 'klant', 'advies'], ['klant', 'advies', 'aangifte'], ['advies', 'klant', 'advies'], ['aangifte', 'klant', 'advies'], ['advies', 'vrij', 'vrij']];
+let k = 0;
+const week = h.week.days.map((d, di) => ({
+  day: d,
+  blocks: h.week.after[di].map((after, bi) => {
+    const start = 30 + k * 2.2; k += 1;
+    return { before: h.week.before[bi], after, cls: 'c-' + typeOf[di][bi], range: `cover ${start.toFixed(1)}% cover ${(start + 7).toFixed(1)}%` };
+  }),
+}));
+const legendColors = ['#EEEAEC', '#E7D3E2', '#CBE9E6', '#D6E4F8', '#F9E3A1'];
+
+const weIcons = [['doc', '#FBE1D8', '#B5462A'], ['swap', '#DDF0EE', '#016A70'], ['receipt', '#FCEFC7', '#6B4E00'], ['search', '#E1ECF8', '#23507F']];
+const youIcons = [['chat', '#E7D3E2', '#5A3A52'], ['userplus', '#CBE9E6', '#0B5E62'], ['calcheck', '#D6E4F8', '#23507F'], ['sun', '#F9E3A1', '#6B4E00']];
+const expIcons = [['wrench', '#714B67', '#FFFFFF'], ['scale', '#017E84', '#FFFFFF'], ['code', '#F08A6B', '#FFFFFF'], ['pin', '#F6D46B', '#1E1A1D']];
+const stepIcons = [['mail', '#F08A6B', '#FFFFFF'], ['sliders', '#F6D46B', '#1E1A1D'], ['cycle', '#017E84', '#FFFFFF'], ['list', '#714B67', '#FFFFFF']];
+---
+<section class="hero">
+  <div class="blob b1 deco" aria-hidden="true"></div>
+  <div class="blob b2 deco" aria-hidden="true"></div>
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <span class="eyebrow teal in">{h.eyebrow}</span>
+      <h1 class="h1 in" style="animation-delay:80ms"><span class="nowrap">{h.h1a}</span><br /><span class="nowrap">{lang === 'nl' ? 'U' : lang === 'es' ? 'Usted' : 'You'} <span class="mark mark-in" style="color:var(--accent)">{h.h1b}</span></span></h1>
+      <p class="lede in" style="animation-delay:160ms">{h.lede}</p>
+      <div class="hero-ctas in" style="animation-delay:240ms">
+        <a class="btn" href={pathFor('contact', lang)}>{c.plan}</a>
+        <a class="link-arrow" href={pathFor('pricing', lang)}>{c.seePricing}<Icon name="arrow" size={16} width={2} /></a>
+      </div>
+    </div>
+    <div class="card-wrap">
+      <span class="tile t1 float deco" aria-hidden="true"><Icon name="doc" stroke="#FFFFFF" /></span>
+      <span class="tile t2 float deco" aria-hidden="true"><Icon name="swap" stroke="#FFFFFF" /></span>
+      <span class="tile t3 float deco" aria-hidden="true"><Icon name="receipt" stroke="#1E1A1D" /></span>
+      <span class="tile t4 float deco" aria-hidden="true"><Icon name="chart" stroke="#FFFFFF" /></span>
+      <span class="hand-note in deco" style="animation-delay:1.8s" aria-hidden="true">{h.note}<svg width="44" height="40" viewBox="0 0 44 40" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6c14 0 26 8 30 26"></path><path d="m27 27 7 6 4-9"></path></svg></span>
+      <div class="drift">
+        <figure class="statement in" style="animation-delay:200ms">
+          <figcaption class="statement-head"><strong><Icon name="card" stroke="var(--accent)" size={18} />{h.statement}</strong><span>{c.example}</span></figcaption>
+          <div>
+            {h.rows.map((r, i) => (
+              <div class="tx row-in" style={`animation-delay:${450 + i * 100}ms`}>
+                <span class="date">{r.date}</span>
+                <span class="desc">{r.desc}</span>
+                <span class="amt">{r.amount}</span>
+                <span class={`pill pop ${r.status}`} style={`animation-delay:${1050 + i * 150}ms`}><Icon name={pillIcon[r.status]} size={12} width={r.status === 'ok' ? 3 : 2.4} />{pillText[r.status]}</span>
+              </div>
+            ))}
+          </div>
+        </figure>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap band-grid">
+    <div style="display:flex;flex-direction:column;gap:28px">
+      <h2 class="reveal">{h.bandTitle}</h2>
+      <p><span class="fill">{h.bandText}</span></p>
+    </div>
+    <figure class="week reveal" aria-label={h.week.title}>
+      <div class="week-head"><strong>{h.week.title}</strong><span aria-hidden="true">{h.week.hint}</span></div>
+      <div class="week-grid">
+        {week.map((d) => (
+          <div class="week-day">
+            <span>{d.day}</span>
+            {d.blocks.map((b) => (
+              <div class="blk"><span aria-hidden="true">{b.before}</span><div class={`after swap ${b.cls}`} style={`animation-range:${b.range}`}>{b.after}</div></div>
+            ))}
+          </div>
+        ))}
+      </div>
+      <div class="legend">
+        {h.week.legend.map((l, i) => <span><i style={`background:${legendColors[i]}`}></i>{l}</span>)}
+      </div>
+    </figure>
+  </div>
+</section>
+
+<section id="aanpak" class="wrap section" style="padding-top:120px">
+  <h2 class="h2 reveal" style="max-width:780px">{h.approachTitleA} <span class="mark mark-scroll">{h.approachMark}</span> {h.approachTitleB}</h2>
+  <div class="two-col">
+    <div class="list-card reveal">
+      <h3><span class="tag">{h.weTag}</span>{h.weTitle}</h3>
+      <ul>{h.weItems.map((t, i) => <li><span class="ico" style={`background:${weIcons[i][1]}`}><Icon name={weIcons[i][0]} stroke={weIcons[i][2]} /></span>{t}</li>)}</ul>
+    </div>
+    <div class="list-card dark reveal">
+      <h3><span class="tag">{h.youTag}</span>{h.youTitle}</h3>
+      <ul>{h.youItems.map((t, i) => <li><span class="ico" style={`background:${youIcons[i][1]}`}><Icon name={youIcons[i][0]} stroke={youIcons[i][2]} /></span>{t}</li>)}</ul>
+    </div>
+  </div>
+</section>
+
+<section id="expertise" class="tint-section" style="margin-top:70px">
+  <div class="wrap section" style="padding-bottom:110px">
+    <div class="head-block reveal">
+      <span class="eyebrow accent">{h.expEyebrow}</span>
+      <h2 class="h2">{h.expTitleA} <span class="mark mark-scroll">{h.expMark}</span></h2>
+      <p class="lede">{h.expLede}</p>
+    </div>
+    <div class="cards4">
+      {h.expCards.map((card, i) => (
+        <div class="card reveal">
+          <span class="badge" style={`background:${expIcons[i][1]}`}><Icon name={expIcons[i][0]} stroke={expIcons[i][2]} width={1.7} /></span>
+          <h3>{card.title}</h3>
+          <p>{card.text}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<section class="wrap section">
+  <h2 class="h2 reveal">{h.stepsTitle}</h2>
+  <div class="steps">
+    <div class="steps-line draw" aria-hidden="true"></div>
+    <ol class="steps-grid">
+      {h.steps.map((s, i) => (
+        <li class="reveal">
+          <span class="badge" style={`width:56px;height:56px;border-radius:16px;background:${stepIcons[i][1]}`}><Icon name={stepIcons[i][0]} stroke={stepIcons[i][2]} /></span>
+          <span class="num">0{i + 1}</span>
+          <h3>{s.title}</h3>
+          <p>{s.text}</p>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<section class="wrap section tight-end">
+  <div class="head-block reveal">
+    <span class="eyebrow accent">{h.pricingEyebrow}</span>
+    <h2 class="h2">{h.pricingTitleA} <span class="mark mark-scroll">{h.pricingMark}</span></h2>
+    <p class="lede">{h.pricingLede}</p>
+  </div>
+  <PriceCards lang={lang} />
+  <a class="link-arrow" href={wa}>{c.whatsapp}<Icon name="arrow" size={16} width={2} /></a>
+</section>

@@ -1,0 +1,18 @@
+# Ledgerwerk
+
+> Ledgerwerk does routine bookkeeping in Odoo on behalf of accounting and administration firms: coding vendor bills and credit notes, reconciling bank lines and processing expense receipts, inside the Odoo database of the firm's client. Based in Kralendijk, Bonaire (Caribbean Netherlands). Not an accounting firm: tax returns, year-end and advice stay with the accountant. Works only with Odoo.
+
+- Location: Kralendijk, Bonaire; works remotely for firms in the Caribbean
+- Languages: Dutch, English, Spanish
+- Pricing (USD, excl. ABB): bundle S $120/month incl. 100 entries ($1.40 extra), M $300 incl. 300 ($1.20 extra), L $850 incl. 1,000 ($1.00 extra); set-up $150 per client database; one entry = one posted document or one reconciled bank line; cancel monthly
+- Contact: office@ledgerwerk.com · WhatsApp +599 785 1502
+- Trade name of Nefar BV, Bonaire. Not affiliated with Odoo S.A.
+
+## Pages
+- [Home (NL)](https://ledgerwerk.com/nl/)
+- [Home (EN)](https://ledgerwerk.com/en/)
+- [Home (ES)](https://ledgerwerk.com/es/)
+- [Pricing](https://ledgerwerk.com/en/pricing/)
+- [FAQ](https://ledgerwerk.com/en/faq/)
+- [Odoo bookkeeping in Bonaire](https://ledgerwerk.com/en/odoo-bookkeeping-bonaire/)
+- [Contact](https://ledgerwerk.com/en/contact/)
